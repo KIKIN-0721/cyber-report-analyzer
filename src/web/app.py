@@ -2,7 +2,7 @@ from typing import Any, Dict, List
 
 from src.model_review.reviewer import semantic_review
 from src.reporting.report_exporter import export_summary
-from src.rules_engine.rule_engine import evaluate_rules
+from src.rules_engine.rule_engine import evaluate_rules, evaluate_s1_baseline
 
 
 _TASKS: Dict[str, Dict[str, Any]] = {}
@@ -54,7 +54,10 @@ def analyze_task(task_id: str, fields: Dict[str, str], rules: List[Dict[str, str
     if not isinstance(rules, list):
         raise TypeError("rules must be a list")
 
-    rule_results = evaluate_rules(fields, rules)
+    if rules:
+        rule_results = evaluate_rules(fields, rules)
+    else:
+        rule_results = evaluate_s1_baseline(fields)
     review_details: List[Dict[str, str]] = []
 
     for item in rule_results:

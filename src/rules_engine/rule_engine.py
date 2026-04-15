@@ -1,7 +1,9 @@
+import re
 from typing import Dict, List
 
 
 VERDICTS = {"PASS", "FAIL", "REVIEW"}
+WEAK_ALGO_KEYWORDS = ("md5", "sha-1", "des", "3des", "rc4", "ecb")
 
 
 def _to_float(value: str) -> float:
@@ -103,6 +105,130 @@ def evaluate_rules(fields: Dict[str, str], rules: List[Dict[str, str]]) -> List[
                 "value": actual,
                 "verdict": verdict,
                 "reason": reason,
+            }
+        )
+
+    return results
+
+
+def evaluate_s1_baseline(fields: Dict[str, str]) -> List[Dict[str, str]]:
+    """Evaluate S1 P0 baseline rules from the rule ledger.
+
+    Covered checks:
+    - RSA key length: >=3072 PASS, ==2048 REVIEW, <2048 FAIL
+    - TLS version: >=1.2 PASS, ==1.1 REVIEW, <=1.0 FAIL
+    - Weak algorithm keywords: hit -> REVIEW, not hit -> PASS
+    """
+    if not isinstance(fields, dict):
+        raise TypeError("fields must be a dict")
+
+    results: List[Dict[str, str]] = []
+
+    # RSA baseline rule
+    rsa_raw = str(fields.get("crypto.rsa.key_length", "")).strip()
+    if not rsa_raw:
+        results.append(
+            {
+                "rule_id": "S1-RSA-001",
+                "field": "crypto.rsa.key_length",
+                "value": "",
+                "verdict": "REVIEW",
+                "reason": "RSA key length is missing.",
+            }
+        )
+    else:
+        try:
+            rsa_bits = int(float(rsa_raw))
+            if rsa_bits >= 3072:
+                verdict = "PASS"
+                reason = "RSA key length is >= 3072."
+            elif rsa_bits == 2048:
+                verdict = "REVIEW"
+                reason = "RSA 2048 requires policy review in S1 baseline."
+            else:
+                verdict = "FAIL"
+                reason = "RSA key length is < 2048."
+        except Exception:
+            verdict = "REVIEW"
+            reason = "RSA key length format is invalid."
+
+        results.append(
+            {
+                "rule_id": "S1-RSA-001",
+                "field": "crypto.rsa.key_length",
+                "value": rsa_raw,
+                "verdict": verdict,
+                "reason": reason,
+            }
+        )
+
+    # TLS baseline rule
+    tls_raw = str(fields.get("crypto.tls.version", "")).strip()
+    if not tls_raw:
+        results.append(
+            {
+                "rule_id": "S1-TLS-001",
+                "field": "crypto.tls.version",
+                "value": "",
+                "verdict": "REVIEW",
+                "reason": "TLS version is missing.",
+            }
+        )
+    else:
+        match = re.search(r"([0-9](?:\.[0-9])?)", tls_raw)
+        if not match:
+            verdict = "REVIEW"
+            reason = "TLS version format is invalid."
+        else:
+            tls_num = float(match.group(1))
+            if tls_num >= 1.2:
+                verdict = "PASS"
+                reason = "TLS version is >= 1.2."
+            elif tls_num == 1.1:
+                verdict = "REVIEW"
+                reason = "TLS 1.1 is legacy and requires review."
+            else:
+                verdict = "FAIL"
+                reason = "TLS 1.0 or below is insecure."
+
+        results.append(
+            {
+                "rule_id": "S1-TLS-001",
+                "field": "crypto.tls.version",
+                "value": tls_raw,
+                "verdict": verdict,
+                "reason": reason,
+            }
+        )
+
+    # Weak algorithm baseline rule
+    weak_source = " ".join(
+        [
+            str(fields.get("crypto.weak", "")),
+            str(fields.get("raw_text", "")),
+            str(fields.get("text", "")),
+        ]
+    ).lower()
+    hits = [name.upper() for name in WEAK_ALGO_KEYWORDS if name in weak_source]
+
+    if hits:
+        results.append(
+            {
+                "rule_id": "S1-WEAK-001",
+                "field": "crypto.weak",
+                "value": ",".join(hits),
+                "verdict": "REVIEW",
+                "reason": "Weak algorithm keyword detected.",
+            }
+        )
+    else:
+        results.append(
+            {
+                "rule_id": "S1-WEAK-001",
+                "field": "crypto.weak",
+                "value": "",
+                "verdict": "PASS",
+                "reason": "No weak algorithm keyword detected.",
             }
         )
 

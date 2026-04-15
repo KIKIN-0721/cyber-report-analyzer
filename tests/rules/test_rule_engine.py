@@ -1,4 +1,4 @@
-from src.rules_engine.rule_engine import evaluate_rules
+from src.rules_engine.rule_engine import evaluate_rules, evaluate_s1_baseline
 
 
 def test_evaluate_rules_returns_list() -> None:
@@ -47,3 +47,29 @@ def test_evaluate_rules_contains_pass() -> None:
     ]
     result = evaluate_rules(fields=fields, rules=rules)
     assert result[0]["verdict"] == "PASS"
+
+
+def test_evaluate_s1_baseline_rsa_review_tls_pass_weak_review() -> None:
+    fields = {
+        "crypto.rsa.key_length": "2048",
+        "crypto.tls.version": "1.2",
+        "raw_text": "detected md5 in report",
+    }
+    results = evaluate_s1_baseline(fields)
+    verdicts = {item["rule_id"]: item["verdict"] for item in results}
+    assert verdicts["S1-RSA-001"] == "REVIEW"
+    assert verdicts["S1-TLS-001"] == "PASS"
+    assert verdicts["S1-WEAK-001"] == "REVIEW"
+
+
+def test_evaluate_s1_baseline_rsa_fail_tls_fail_weak_pass() -> None:
+    fields = {
+        "crypto.rsa.key_length": "1024",
+        "crypto.tls.version": "1.0",
+        "raw_text": "no weak keyword",
+    }
+    results = evaluate_s1_baseline(fields)
+    verdicts = {item["rule_id"]: item["verdict"] for item in results}
+    assert verdicts["S1-RSA-001"] == "FAIL"
+    assert verdicts["S1-TLS-001"] == "FAIL"
+    assert verdicts["S1-WEAK-001"] == "PASS"

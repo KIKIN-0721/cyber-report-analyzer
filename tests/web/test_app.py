@@ -41,3 +41,19 @@ def test_analyze_task_pipeline() -> None:
     assert updated["status"] == "completed"
     assert updated["result"]["summary"]["PASS"] == 1
     assert updated["result"]["summary"]["FAIL"] == 1
+
+
+def test_analyze_task_uses_s1_baseline_when_rules_empty() -> None:
+    task = submit_report("report-4.pdf")
+    fields = {
+        "crypto.rsa.key_length": "2048",
+        "crypto.tls.version": "1.1",
+        "raw_text": "contains md5",
+    }
+
+    updated = analyze_task(task["task_id"], fields, [])
+    assert updated["status"] == "completed"
+    summary = updated["result"]["summary"]
+    assert summary["PASS"] == 0
+    assert summary["FAIL"] == 0
+    assert summary["REVIEW"] == 3
