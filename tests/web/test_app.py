@@ -1,4 +1,12 @@
-from src.web.app import analyze_task, get_task, health, set_task_result, submit_report
+from src.web.app import (
+    analyze_task,
+    get_pending_reviews,
+    get_task,
+    get_task_result,
+    health,
+    set_task_result,
+    submit_report,
+)
 
 
 def test_health_endpoint() -> None:
@@ -17,6 +25,7 @@ def test_set_task_result_marks_completed() -> None:
     updated = set_task_result(task["task_id"], {"summary": "ok"})
     assert updated["status"] == "completed"
     assert updated["result"] == {"summary": "ok"}
+    assert get_task_result(task["task_id"]) == {"summary": "ok"}
 
 
 def test_analyze_task_pipeline() -> None:
@@ -63,3 +72,8 @@ def test_analyze_task_uses_s1_baseline_when_rules_empty() -> None:
     assert summary["PASS"] == 0
     assert summary["FAIL"] == 0
     assert summary["REVIEW"] == 3
+    pending = get_pending_reviews(task["task_id"])
+    assert len(pending) == 3
+    review_details = updated["result"]["review_details"]
+    assert review_details[0]["normalized"] == "RSA-2048"
+    assert any(item["normalized"] == "TLS-1.1" for item in review_details)

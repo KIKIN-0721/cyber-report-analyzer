@@ -2,9 +2,9 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List
 from uuid import uuid4
 
-from src.model_review.reviewer import semantic_review
+from src.model_review.reviewer import batch_semantic_review
 from src.reporting.report_exporter import export_summary
-from src.rules_engine.rule_engine import evaluate_rules, evaluate_s1_baseline
+from src.rules_engine.rule_engine import classify_review_items, evaluate_rules, evaluate_s1_baseline
 from src.rules_engine.s1_rulebook import get_s1_rulebook
 
 
@@ -39,12 +39,26 @@ def get_task(task_id: str) -> Dict[str, Any]:
     return _TASKS[task_id]
 
 
+def get_task_result(task_id: str) -> Dict[str, Any] | None:
+    """Return the analysis result payload for one task."""
+    return get_task(task_id)["result"]
+
+
 def set_task_result(task_id: str, result: Dict[str, Any]) -> Dict[str, Any]:
     """Attach result and move task to completed state."""
     task = get_task(task_id)
     task["result"] = result
     task["status"] = "completed"
     return task
+
+
+def get_pending_reviews(task_id: str) -> List[Dict[str, str]]:
+    """Return REVIEW items that need manual or model-assisted follow-up."""
+    result = get_task_result(task_id)
+    if not result:
+        return []
+    pending = result.get("pending_reviews", [])
+    return pending if isinstance(pending, list) else []
 
 
 def analyze_task(task_id: str, fields: Dict[str, str], rules: List[Dict[str, str]]) -> Dict[str, Any]:
@@ -63,16 +77,11 @@ def analyze_task(task_id: str, fields: Dict[str, str], rules: List[Dict[str, str
     else:
         rulebook_version = str(get_s1_rulebook()["rulebook_version"])
         rule_results = evaluate_s1_baseline(fields)
+    pending_reviews = classify_review_items(rule_results)
+    normalized_reviews = batch_semantic_review(pending_reviews)
     review_details: List[Dict[str, str]] = []
-
-    for item in rule_results:
-        if item.get("verdict") == "REVIEW":
-            review_details.append(
-                {
-                    "rule_id": item.get("rule_id", ""),
-                    **semantic_review({"value": item.get("value", "")}),
-                }
-            )
+    for pending, normalized in zip(pending_reviews, normalized_reviews):
+        review_details.append({**pending, **normalized})
 
     summary = export_summary(rule_results)
     payload: Dict[str, Any] = {
@@ -83,6 +92,7 @@ def analyze_task(task_id: str, fields: Dict[str, str], rules: List[Dict[str, str
         "task_id": task_id,
         "fields": fields,
         "rule_results": rule_results,
+        "pending_reviews": pending_reviews,
         "review_details": review_details,
         "summary": summary,
     }

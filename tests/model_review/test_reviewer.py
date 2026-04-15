@@ -1,4 +1,4 @@
-from src.model_review.reviewer import semantic_review
+from src.model_review.reviewer import batch_semantic_review, semantic_review
 
 
 def test_semantic_review_normalizes_rsa() -> None:
@@ -21,3 +21,20 @@ def test_semantic_review_unknown_requires_review() -> None:
     result = semantic_review({"value": "custom security sentence"})
     assert "Requires manual review" in result["explanation"]
     assert result["confidence"] == "0.50"
+
+
+def test_semantic_review_uses_field_context_for_numeric_values() -> None:
+    result = semantic_review({"field": "crypto.rsa.key_length", "value": "2048"})
+    assert result["normalized"] == "RSA-2048"
+    assert result["policy_hint"] == "s1_rsa_review"
+
+
+def test_batch_semantic_review_preserves_order() -> None:
+    results = batch_semantic_review(
+        [
+            {"field": "crypto.tls.version", "value": "1.1"},
+            {"value": "hash method: MD5"},
+        ]
+    )
+    assert results[0]["normalized"] == "TLS-1.1"
+    assert results[1]["normalized"] == "WEAK-ALGO-MD5"

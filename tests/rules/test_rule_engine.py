@@ -1,4 +1,4 @@
-from src.rules_engine.rule_engine import evaluate_rules, evaluate_s1_baseline
+from src.rules_engine.rule_engine import classify_review_items, evaluate_rules, evaluate_s1_baseline
 
 
 def test_evaluate_rules_returns_list() -> None:
@@ -49,6 +49,22 @@ def test_evaluate_rules_contains_pass() -> None:
     assert result[0]["verdict"] == "PASS"
 
 
+def test_evaluate_rules_supports_op_alias() -> None:
+    fields = {"crypto.tls.version": "1.2"}
+    rules = [
+        {
+            "rule_id": "R-TLS-ALIAS-001",
+            "field": "crypto.tls.version",
+            "op": "==",
+            "value": "1.2",
+            "priority": "P0",
+        }
+    ]
+    result = evaluate_rules(fields=fields, rules=rules)
+    assert result[0]["verdict"] == "PASS"
+    assert result[0]["priority"] == "P0"
+
+
 def test_evaluate_s1_baseline_rsa_review_tls_pass_weak_review() -> None:
     fields = {
         "crypto.rsa.key_length": "2048",
@@ -73,3 +89,12 @@ def test_evaluate_s1_baseline_rsa_fail_tls_fail_weak_pass() -> None:
     assert verdicts["S1-RSA-001"] == "FAIL"
     assert verdicts["S1-TLS-001"] == "FAIL"
     assert verdicts["S1-WEAK-001"] == "PASS"
+
+
+def test_classify_review_items_filters_review_results() -> None:
+    results = [
+        {"rule_id": "A", "field": "one", "value": "1", "verdict": "PASS", "reason": "ok"},
+        {"rule_id": "B", "field": "two", "value": "2", "verdict": "REVIEW", "reason": "check"},
+    ]
+    reviews = classify_review_items(results)
+    assert reviews == [{"rule_id": "B", "field": "two", "value": "2", "reason": "check"}]
