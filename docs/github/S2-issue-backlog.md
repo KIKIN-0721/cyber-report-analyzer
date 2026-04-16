@@ -7,6 +7,12 @@
 - 所有 Issue 必须打全标签（type、stage、module、priority）
 - 关键链路问题优先处理 parser 与 ocr
 
+执行规则：
+- 所有字段输出必须对齐 `StructuredField` 语义。
+- parser/OCR 任务必须保留来源页码、片段或图片引用。
+- 存储任务必须支持结果回放，不能只做临时变量。
+- 关闭 Issue 前必须说明对 S3 规则输入是否有影响。
+
 ## A. 徐志翔
 
 1. [S2][management] 冻结S2范围与M2验收标准

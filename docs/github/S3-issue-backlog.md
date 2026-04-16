@@ -6,6 +6,12 @@
 - 先关闭规则引擎P0，再推进模型复核P1
 - 所有Issue必须附样本输入与预期输出
 
+执行规则：
+- 规则类 Issue 必须覆盖 PASS、FAIL、REVIEW 至少两类样例。
+- 模型类 Issue 必须说明模型输出是否只作为解释和复核建议。
+- 证据类 Issue 必须保留 `field/value/page/snippet/source_type`。
+- 关闭 Issue 前必须说明是否改变 `RuleResult` 或 `EvidenceTrace`。
+
 ## A. 徐志翔
 
 1. [S3][rules] 冻结规则优先级与冲突处理策略
