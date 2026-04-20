@@ -1,19 +1,18 @@
 import argparse
-import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 from uuid import uuid4
 
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+if __package__ in (None, ""):
+    ROOT = Path(__file__).resolve().parents[2]
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
 
 from src.common.json_io import dump_json, load_string_map, write_json_file
 from src.model_review.reviewer import batch_semantic_review
 from src.reporting.report_exporter import export_summary
-from src.rules_engine.s1_field_extractor import S1_CORE_FIELDS
 from src.rules_engine.rule_engine import classify_review_items, evaluate_rules, evaluate_s1_baseline
 from src.rules_engine.s1_rulebook import get_s1_rulebook
 

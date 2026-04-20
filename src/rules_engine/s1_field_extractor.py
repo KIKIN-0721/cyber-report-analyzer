@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 import argparse
-import re
 import sys
 from pathlib import Path
 from typing import Dict, List
 
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+if __package__ in (None, ""):
+    ROOT = Path(__file__).resolve().parents[2]
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
 
 from src.common.json_io import dump_json, load_json_object, write_json_file
 from src.ocr.patterns import RSA_PATTERNS, TLS_PATTERNS, WEAK_ALGO_PATTERNS

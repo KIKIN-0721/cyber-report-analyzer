@@ -324,15 +324,23 @@ def _decode_ascii85(data: bytes) -> bytes:
 
 
 def _build_cli_payload(pdf_path: Path) -> Dict[str, object]:
-    result = extract_text_and_images(pdf_path)
-    text_blocks = result.get("text_blocks", [])
-    image_paths = result.get("image_paths", [])
+    exists = pdf_path.exists()
+    is_file = pdf_path.is_file() if exists else False
+    if exists and is_file:
+        result = extract_text_and_images(pdf_path)
+        text_blocks = result.get("text_blocks", [])
+        image_paths = result.get("image_paths", [])
+        size_bytes = pdf_path.stat().st_size
+    else:
+        text_blocks = []
+        image_paths = []
+        size_bytes = None
     return {
         "input_pdf": str(pdf_path),
         "file_name": pdf_path.name,
-        "exists": pdf_path.exists(),
-        "is_file": pdf_path.is_file(),
-        "size_bytes": pdf_path.stat().st_size,
+        "exists": exists,
+        "is_file": is_file,
+        "size_bytes": size_bytes,
         "parser_text_block_count": len(text_blocks),
         "image_count": len(image_paths),
         "parser_text_blocks_full": text_blocks,
