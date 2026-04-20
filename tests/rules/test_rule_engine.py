@@ -11,6 +11,8 @@ def test_evaluate_rules_numeric_comparison() -> None:
     rules = [
         {
             "rule_id": "R-RSA-001",
+            "standard_id": "标准1.1",
+            "check_item": "密钥长度",
             "field": "crypto.rsa.key_length",
             "operator": ">=",
             "value": "3072",
@@ -18,6 +20,8 @@ def test_evaluate_rules_numeric_comparison() -> None:
     ]
     result = evaluate_rules(fields=fields, rules=rules)
     assert result[0]["rule_id"] == "R-RSA-001"
+    assert result[0]["standard_id"] == "标准1.1"
+    assert result[0]["check_item"] == "密钥长度"
     assert result[0]["verdict"] == "FAIL"
 
 
@@ -54,6 +58,8 @@ def test_evaluate_rules_supports_op_alias() -> None:
     rules = [
         {
             "rule_id": "R-TLS-ALIAS-001",
+            "standard_id": "标准1.2",
+            "check_item": "TLS协议版本",
             "field": "crypto.tls.version",
             "op": "==",
             "value": "1.2",
@@ -63,6 +69,8 @@ def test_evaluate_rules_supports_op_alias() -> None:
     result = evaluate_rules(fields=fields, rules=rules)
     assert result[0]["verdict"] == "PASS"
     assert result[0]["priority"] == "P0"
+    assert result[0]["standard_id"] == "标准1.2"
+    assert result[0]["check_item"] == "TLS协议版本"
 
 
 def test_evaluate_s1_baseline_rsa_review_tls_pass_weak_review() -> None:
@@ -76,6 +84,8 @@ def test_evaluate_s1_baseline_rsa_review_tls_pass_weak_review() -> None:
     assert verdicts["S1-RSA-001"] == "REVIEW"
     assert verdicts["S1-TLS-001"] == "PASS"
     assert verdicts["S1-WEAK-001"] == "REVIEW"
+    assert {item["standard_id"] for item in results} == {"标准1.1", "标准1.2"}
+    assert any(item["check_item"] == "不合适的加密算法" for item in results)
 
 
 def test_evaluate_s1_baseline_rsa_fail_tls_fail_weak_pass() -> None:
@@ -89,12 +99,39 @@ def test_evaluate_s1_baseline_rsa_fail_tls_fail_weak_pass() -> None:
     assert verdicts["S1-RSA-001"] == "FAIL"
     assert verdicts["S1-TLS-001"] == "FAIL"
     assert verdicts["S1-WEAK-001"] == "PASS"
+    assert any(item["standard_id"] == "标准1.1" for item in results)
+    assert any(item["check_item"] == "密钥长度" for item in results)
 
 
 def test_classify_review_items_filters_review_results() -> None:
     results = [
-        {"rule_id": "A", "field": "one", "value": "1", "verdict": "PASS", "reason": "ok"},
-        {"rule_id": "B", "field": "two", "value": "2", "verdict": "REVIEW", "reason": "check"},
+        {
+            "rule_id": "A",
+            "standard_id": "标准1.1",
+            "check_item": "密钥长度",
+            "field": "one",
+            "value": "1",
+            "verdict": "PASS",
+            "reason": "ok",
+        },
+        {
+            "rule_id": "B",
+            "standard_id": "标准1.2",
+            "check_item": "TLS协议版本",
+            "field": "two",
+            "value": "2",
+            "verdict": "REVIEW",
+            "reason": "check",
+        },
     ]
     reviews = classify_review_items(results)
-    assert reviews == [{"rule_id": "B", "field": "two", "value": "2", "reason": "check"}]
+    assert reviews == [
+        {
+            "rule_id": "B",
+            "standard_id": "标准1.2",
+            "check_item": "TLS协议版本",
+            "field": "two",
+            "value": "2",
+            "reason": "check",
+        }
+    ]

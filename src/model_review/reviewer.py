@@ -1,5 +1,15 @@
+import argparse
+import json
 import re
+import sys
+from pathlib import Path
 from typing import Dict, List
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.common.json_io import dump_json, load_string_map, write_json_file
 
 
 WEAK_ALGORITHMS = ("md5", "sha-1", "des", "3des", "rc4", "ecb")
@@ -128,3 +138,37 @@ def batch_semantic_review(items: List[Dict[str, str]]) -> List[Dict[str, str]]:
             raise TypeError("each item must be a dict")
         results.append(semantic_review(item))
     return results
+
+
+def _load_fields(path: Path) -> Dict[str, str]:
+    return load_string_map(path)
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser(description="Run S1 semantic normalization.")
+    parser.add_argument("--field", help="Single field name.")
+    parser.add_argument("--value", help="Single field value.")
+    parser.add_argument("--fields-file", help="JSON fields file from s1_field_extractor.py.")
+    parser.add_argument("--output", help="Optional JSON output path.")
+    args = parser.parse_args()
+
+    if args.fields_file:
+        fields = _load_fields(args.fields_file)
+        items = []
+        for field_name in ("crypto.rsa.key_length", "crypto.tls.version", "crypto.weak"):
+            if field_name not in fields:
+                continue
+            result = semantic_review({"field": field_name, "value": fields[field_name]})
+            items.append({"field": field_name, "value": fields[field_name], **result})
+        payload: object = items
+    else:
+        payload = semantic_review({"field": args.field or "", "value": args.value or ""})
+
+    text = dump_json(payload)
+    if args.output:
+        write_json_file(Path(args.output), payload)
+    print(text)
+
+
+if __name__ == "__main__":
+    _main()

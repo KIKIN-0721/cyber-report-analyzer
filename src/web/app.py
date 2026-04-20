@@ -1,9 +1,19 @@
+import argparse
+import json
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List
 from uuid import uuid4
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.common.json_io import dump_json, load_string_map, write_json_file
 from src.model_review.reviewer import batch_semantic_review
 from src.reporting.report_exporter import export_summary
+from src.rules_engine.s1_field_extractor import S1_CORE_FIELDS
 from src.rules_engine.rule_engine import classify_review_items, evaluate_rules, evaluate_s1_baseline
 from src.rules_engine.s1_rulebook import get_s1_rulebook
 
@@ -92,9 +102,44 @@ def analyze_task(task_id: str, fields: Dict[str, str], rules: List[Dict[str, str
         "task_id": task_id,
         "fields": fields,
         "rule_results": rule_results,
+        "findings": rule_results,
         "pending_reviews": pending_reviews,
         "review_details": review_details,
         "summary": summary,
     }
     task = set_task_result(task_id, payload)
     return task
+
+
+def _load_fields(path: Path) -> Dict[str, str]:
+    return load_string_map(path)
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser(description="Run the S1 backend task loop.")
+    parser.add_argument("--file-name", help="Original report file name.")
+    parser.add_argument("--pdf-path", type=Path, help="Original report PDF path.")
+    parser.add_argument("--fields-file", required=True, type=Path, help="JSON fields file.")
+    parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    args = parser.parse_args()
+
+    file_name = args.file_name or (args.pdf_path.name if args.pdf_path else "")
+    task = submit_report(file_name)
+    completed = analyze_task(task["task_id"], _load_fields(args.fields_file), [])
+    compact = {
+        "task_id": completed.get("task_id"),
+        "file_name": completed.get("file_name"),
+        "status": completed.get("status"),
+        "summary": (completed.get("result") or {}).get("summary"),
+        "pending_reviews": (completed.get("result") or {}).get("pending_reviews"),
+        "findings": (completed.get("result") or {}).get("findings"),
+        "result": completed.get("result"),
+    }
+    text = dump_json(compact)
+    if args.output:
+        write_json_file(args.output, compact)
+    print(text)
+
+
+if __name__ == "__main__":
+    _main()

@@ -1,6 +1,15 @@
+import argparse
+import json
 import re
+import sys
+from pathlib import Path
 from typing import Any, Dict, List
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.common.json_io import dump_json, load_string_map, write_json_file
 from src.rules_engine.s1_rulebook import get_s1_rulebook
 
 
@@ -56,6 +65,8 @@ def _build_rule_result(
 ) -> Dict[str, str]:
     result = {
         "rule_id": str(rule.get("rule_id") or ""),
+        "standard_id": str(rule.get("standard_id") or ""),
+        "check_item": str(rule.get("check_item") or ""),
         "field": field,
         "value": value,
         "verdict": verdict,
@@ -157,6 +168,8 @@ def classify_review_items(results: List[Dict[str, str]]) -> List[Dict[str, str]]
         review_items.append(
             {
                 "rule_id": str(item.get("rule_id") or ""),
+                "standard_id": str(item.get("standard_id") or ""),
+                "check_item": str(item.get("check_item") or ""),
                 "field": str(item.get("field") or ""),
                 "value": str(item.get("value") or ""),
                 "reason": str(item.get("reason") or ""),
@@ -183,10 +196,16 @@ def evaluate_s1_baseline(fields: Dict[str, str]) -> List[Dict[str, str]]:
         for rule in rulebook["rules"]
         if isinstance(rule, dict) and rule.get("rule_id")
     }
+
+    def require_rule(rule_id: str) -> Dict[str, Any]:
+        if rule_id not in rule_defs:
+            raise KeyError(f"missing S1 rule definition: {rule_id}")
+        return rule_defs[rule_id]
+
     results: List[Dict[str, str]] = []
 
     # RSA baseline rule
-    rsa_rule = rule_defs["S1-RSA-001"]
+    rsa_rule = require_rule("S1-RSA-001")
     rsa_raw = str(fields.get("crypto.rsa.key_length", "")).strip()
     if not rsa_raw:
         results.append(
@@ -225,7 +244,7 @@ def evaluate_s1_baseline(fields: Dict[str, str]) -> List[Dict[str, str]]:
         )
 
     # TLS baseline rule
-    tls_rule = rule_defs["S1-TLS-001"]
+    tls_rule = require_rule("S1-TLS-001")
     tls_raw = str(fields.get("crypto.tls.version", "")).strip()
     if not tls_raw:
         results.append(
@@ -265,7 +284,7 @@ def evaluate_s1_baseline(fields: Dict[str, str]) -> List[Dict[str, str]]:
         )
 
     # Weak algorithm baseline rule
-    weak_rule = rule_defs["S1-WEAK-001"]
+    weak_rule = require_rule("S1-WEAK-001")
     weak_source = " ".join(
         [
             str(fields.get("crypto.weak", "")),
@@ -297,3 +316,24 @@ def evaluate_s1_baseline(fields: Dict[str, str]) -> List[Dict[str, str]]:
         )
 
     return results
+
+
+def _load_fields(path: Path) -> Dict[str, str]:
+    return load_string_map(path)
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser(description="Evaluate S1 baseline rules.")
+    parser.add_argument("--fields-file", required=True, type=Path, help="JSON fields file.")
+    parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    args = parser.parse_args()
+
+    payload = evaluate_s1_baseline(_load_fields(args.fields_file))
+    text = dump_json(payload)
+    if args.output:
+        write_json_file(args.output, payload)
+    print(text)
+
+
+if __name__ == "__main__":
+    _main()

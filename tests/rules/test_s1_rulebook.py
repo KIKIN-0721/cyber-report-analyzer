@@ -15,3 +15,5 @@ def test_get_s1_rulebook_shape() -> None:
     for item in data["rules"]:
         assert item["priority"] == "P0"
         assert item["source_document"].endswith("S1-规则台账-v0.1.md")
+        assert item["standard_id"].startswith("标准")
+        assert item["check_item"]

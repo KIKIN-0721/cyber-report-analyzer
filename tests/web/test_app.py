@@ -34,12 +34,16 @@ def test_analyze_task_pipeline() -> None:
     rules = [
         {
             "rule_id": "R-RSA-001",
+            "standard_id": "标准1.1",
+            "check_item": "密钥长度",
             "field": "crypto.rsa.key_length",
             "operator": ">=",
             "value": "3072",
         },
         {
             "rule_id": "R-TLS-001",
+            "standard_id": "标准1.2",
+            "check_item": "TLS协议版本",
             "field": "crypto.tls.version",
             "operator": "==",
             "value": "1.2",
@@ -53,6 +57,8 @@ def test_analyze_task_pipeline() -> None:
     assert updated["result"]["trace_id"].startswith("trace-")
     assert updated["result"]["summary"]["PASS"] == 1
     assert updated["result"]["summary"]["FAIL"] == 1
+    assert updated["result"]["findings"] == updated["result"]["rule_results"]
+    assert updated["result"]["rule_results"][0]["standard_id"] == "标准1.1"
 
 
 def test_analyze_task_uses_s1_baseline_when_rules_empty() -> None:
@@ -77,3 +83,4 @@ def test_analyze_task_uses_s1_baseline_when_rules_empty() -> None:
     review_details = updated["result"]["review_details"]
     assert review_details[0]["normalized"] == "RSA-2048"
     assert any(item["normalized"] == "TLS-1.1" for item in review_details)
+    assert any(item["standard_id"] == "标准1.1" for item in pending)

@@ -1,0 +1,341 @@
+{
+  "schema_version": "s1.demo.v1",
+  "input_pdf": {
+    "path": "tests\\网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告.pdf",
+    "file_name": "网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告.pdf",
+    "size_bytes": 353006
+  },
+  "stage_1_parse_pdf": {
+    "parser_text_block_count": 101,
+    "selected_text_block_count": 3,
+    "image_count": 3,
+    "text_source": "pypdf_text_layer",
+    "pypdf_note": "PyPDF2 text-layer extraction succeeded.",
+    "parser_text_blocks": [
+      "NR M I{ d * i & &1",
+      "+",
+      "\"X 5 (( *g *g ,",
+      "T\" -t\" &E\\6D",
+      "+",
+      "4< 1#K",
+      "\"V5 (&*e *e, R\" -r \" &E\\6B",
+      "4< 1 6 1#K",
+      "4< e o#",
+      "NRM I{d* i &&1",
+      "4do#",
+      "2025",
+      "-u",
+      "6",
+      "6",
+      "27",
+      "4",
+      "E.T",
+      "1",
+      "M^",
+      "2",
+      "! 6 ^I",
+      "2.1",
+      "\\C rOS /&Z5",
+      "2.2",
+      "4: \\. Z5",
+      "2.3",
+      "4: 1 6 Z5",
+      "3",
+      "MZ",
+      "4",
+      "( -Zo!",
+      "1.",
+      "M^",
+      "M6/:M ;F/:( Wgo!",
+      "-\"",
+      "KM*[`",
+      "\"T L",
+      "> < Kz&",
+      "U R L/",
+      ":69",
+      "4o`",
+      "1",
+      "*e, R \"",
+      "-r\"",
+      "\"V5 (&*e",
+      "&E\\6B",
+      "htt ps : / / sw o",
+      "sw f w . ncu . e",
+      "du . cn/ m an",
+      "age",
+      "1",
+      "2",
+      "*e, R \"",
+      "-r\"",
+      "\"V5 (&*e",
+      "4N0 /n ;",
+      "f1",
+      "htt ps : / / sw o",
+      "sw f w . ncu . e",
+      "du . cn/ m an",
+      "age",
+      "1",
+      "2.",
+      "! 6^I",
+      "2.1",
+      "\\E t OU/(Z 5",
+      "NPNP: o 7 % NPZd",
+      "2.2",
+      "4< \\ .Z5",
+      "E2Ez.T",
+      "2.3",
+      "4< 1 6Z5",
+      "1 6E7 &6+/",
+      "R.# \" 6BeOo O( R \" *eD 'j 4o2m",
+      "\" F !/ \" 1 !/*eKL @f AFJHJHo ^O( ^X( ! ^WKJC Zd",
+      "htt ps : / / sw osw f w . ncu . ed u . cn/m an ag e",
+      "o D' ) *e _ _ \\%\"Ez .To ^ \" F ) 7b7G",
+      "^O( ( C J+ Z' *e ! JHJH",
+      "( -Z",
+      "!.96BeO 7 i",
+      "R S A 20 48",
+      ";",
+      "RSA",
+      "-",
+      "3072",
+      ";",
+      "TL S 1.2",
+      ";",
+      "TL S 1.3",
+      ";",
+      "M D 5",
+      ";",
+      "SHA",
+      "-",
+      "1",
+      ";",
+      "DES",
+      ";",
+      "RC4",
+      "; A m 9@ L* @=' 4 CSHZHCC*-9944d*d // 9/3 3 9/33 3 32 32322 301 $ & 7 67 $' & 67 & & 7 !27 &'!\" 5 3!& 7 &%# 5 3 &' 367 &## &' #65 &' Tew 44< '' ??/ / // 9/33 3 9/3 32 32201 ! 4' !27 &#! !27 &#! !27 &#!\" 5 3! !\" 5 3! ! &y /H% # `^^`9 mXXXX {V^XXddX basP b+fyR 3 % F = Xt { B & * . 2 6 1@ +(0 0 +,4'4// 3 + //33 9/33 3 9/33 3 9/301 !27 &' 3276' ! #65 ! &'$ 4' ! ! ! ! N Th C@ /k=' 8 : ' c w vNl%' NL G EaeA um5 V Rn _ f _ f L ' L i } 5@ d_[Pgg|| q DD b b // 9/3 9/3 9/3 9/32 332201 &'7 67!\" 5 3!27 3!27& 7 67 #\" 67 '&#\" &' &#!\" 5 &'6 7 367 !27 &#!\" 5 3!&'6554' 3!27 & !\"%5! NdVVV`@Vb8 vDR =+ h)He -a 1# +>+1]d * R >J ?]'P ^ijLl6 1!-+ B`FFfjB > = NX d>= n kd?Zj #`Nnmm 7%F5im /X;>HRj V=5D3Dw= 4I> g_=<l h>C[ f V ! 3@ O /3/3 9///]q 3 3 301 ! #65 4' 3!27 #6 ! ! ! N qZ g^ N N N +`ksX %Th nN!iuY g3 k/ k s - 9 = A E I @YGB<F>;( A & PBBB B/B B FF ?F F ; ; ; /;?; ; OA A A A BF;A A;FB C. @5 5 /3/]322 9/////]]]]]qq]]q]]q 33 3 3 3 3 3 301 ! 6' 7!67!& 5 7!654' !27 & ! ! 7 !27 & !& 5 ! ! !5! !5 !5 T; 3PC: ; # s1GC3 q7_ -GE/2KK } <N X [DD- / 51 X L@# f V Z ^ b @eL[ [ I[ [MX^bWAa8 I ? / 6 -) 0M`M O^ ^ `^ O^ OW @aa ?a 0 o M^Wa aW^M IO O"
+    ],
+    "selected_text_blocks": [
+      "page 1: 网络空间安全基地 +南昌大学学工一 体化平台垂直越权 +攻击报告 南昌大学学工一体化平台垂直越权 攻击成果报告 攻击队： 网络空间安全基地 时间： 2025年6月27日 目录 1 综述 2 分析过程 2.1 资产关联性证明 2.2 攻击路径说明 2.3 攻击成果说明 3 结论 4 修复建议： 1. 综述 结果总结汇总如下表： 序号 系统对象 单位 漏洞类型 URL/主机 数量",
+      "page 2: 1 学工一体化 平台 南昌大学 垂直越权 https://swo swfw.ncu.e du.cn/man age 1 2 学工一体化 平台 南昌大学 敏感信息泄 露 https://swo swfw.ncu.e du.cn/man age 1 2. 分析过程 2.1 资产关联性证明 内网网段，校园网访问 2.2 攻击路径说明 直接登录 2.3 攻击成果说明 成果目标基本情况 获得后台权限，能够获取学生填写数据",
+      "page 3: 可以看到可以拿到学籍照片等等，还能够违规处分进行管理访问 https://swoswfw.ncu.edu.cn/manage ，用个人学习通账号登录，还可以看个人档案 也能够处理第二课堂学分等等 修复建议 加强权限校验 RSA2048 、RSA-3072、TLS1.2、TLS 1.3、MD5、SHA-1、DES、 RC4"
+    ],
+    "text_blocks": [
+      "page 1: 网络空间安全基地 +南昌大学学工一 体化平台垂直越权 +攻击报告 南昌大学学工一体化平台垂直越权 攻击成果报告 攻击队： 网络空间安全基地 时间： 2025年6月27日 目录 1 综述 2 分析过程 2.1 资产关联性证明 2.2 攻击路径说明 2.3 攻击成果说明 3 结论 4 修复建议： 1. 综述 结果总结汇总如下表： 序号 系统对象 单位 漏洞类型 URL/主机 数量",
+      "page 2: 1 学工一体化 平台 南昌大学 垂直越权 https://swo swfw.ncu.e du.cn/man age 1 2 学工一体化 平台 南昌大学 敏感信息泄 露 https://swo swfw.ncu.e du.cn/man age 1 2. 分析过程 2.1 资产关联性证明 内网网段，校园网访问 2.2 攻击路径说明 直接登录 2.3 攻击成果说明 成果目标基本情况 获得后台权限，能够获取学生填写数据",
+      "page 3: 可以看到可以拿到学籍照片等等，还能够违规处分进行管理访问 https://swoswfw.ncu.edu.cn/manage ，用个人学习通账号登录，还可以看个人档案 也能够处理第二课堂学分等等 修复建议 加强权限校验 RSA2048 、RSA-3072、TLS1.2、TLS 1.3、MD5、SHA-1、DES、 RC4"
+    ],
+    "image_paths": [
+      "tests\\tmp\\网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告_images\\image_003_obj_25.ppm",
+      "tests\\tmp\\网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告_images\\image_005_obj_28.ppm",
+      "tests\\tmp\\网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告_images\\image_006_obj_29.jpg"
+    ]
+  },
+  "stage_2_extract_fields": {
+    "fields": {
+      "crypto.rsa.key_length": "2048",
+      "crypto.tls.version": "1.2",
+      "crypto.weak": "MD5,SHA-1,DES,RC4",
+      "raw_text": "page 1: 网络空间安全基地 +南昌大学学工一 体化平台垂直越权 +攻击报告 南昌大学学工一体化平台垂直越权 攻击成果报告 攻击队： 网络空间安全基地 时间： 2025年6月27日 目录 1 综述 2 分析过程 2.1 资产关联性证明 2.2 攻击路径说明 2.3 攻击成果说明 3 结论 4 修复建议： 1. 综述 结果总结汇总如下表： 序号 系统对象 单位 漏洞类型 URL/主机 数量\npage 2: 1 学工一体化 平台 南昌大学 垂直越权 https://swo swfw.ncu.e du.cn/man age 1 2 学工一体化 平台 南昌大学 敏感信息泄 露 https://swo swfw.ncu.e du.cn/man age 1 2. 分析过程 2.1 资产关联性证明 内网网段，校园网访问 2.2 攻击路径说明 直接登录 2.3 攻击成果说明 成果目标基本情况 获得后台权限，能够获取学生填写数据\npage 3: 可以看到可以拿到学籍照片等等，还能够违规处分进行管理访问 https://swoswfw.ncu.edu.cn/manage ，用个人学习通账号登录，还可以看个人档案 也能够处理第二课堂学分等等 修复建议 加强权限校验 RSA2048 、RSA-3072、TLS1.2、TLS 1.3、MD5、SHA-1、DES、 RC4"
+    },
+    "field_count": 3
+  },
+  "stage_3_normalize_fields": [
+    {
+      "field": "crypto.rsa.key_length",
+      "value": "2048",
+      "normalized": "RSA-2048",
+      "explanation": "RSA key length meets minimum baseline but should be reviewed by policy.",
+      "confidence": "0.90",
+      "policy_hint": "s1_rsa_review"
+    },
+    {
+      "field": "crypto.tls.version",
+      "value": "1.2",
+      "normalized": "TLS-1.2",
+      "explanation": "TLS version extracted successfully.",
+      "confidence": "0.95",
+      "policy_hint": "s1_tls_pass"
+    },
+    {
+      "field": "crypto.weak",
+      "value": "MD5,SHA-1,DES,RC4",
+      "normalized": "WEAK-ALGO-MD5",
+      "explanation": "Weak cryptographic algorithm keyword detected.",
+      "confidence": "0.92",
+      "policy_hint": "manual_review_required"
+    }
+  ],
+  "stage_4_rule_results": [
+    {
+      "rule_id": "S1-RSA-001",
+      "standard_id": "标准1.1",
+      "check_item": "密钥长度",
+      "field": "crypto.rsa.key_length",
+      "value": "2048",
+      "verdict": "REVIEW",
+      "reason": "RSA 2048 requires policy review in S1 baseline.",
+      "priority": "P0",
+      "policy": ">=3072 PASS, ==2048 REVIEW, <2048 FAIL"
+    },
+    {
+      "rule_id": "S1-TLS-001",
+      "standard_id": "标准1.2",
+      "check_item": "TLS协议版本",
+      "field": "crypto.tls.version",
+      "value": "1.2",
+      "verdict": "PASS",
+      "reason": "TLS version is >= 1.2.",
+      "priority": "P0",
+      "policy": ">=1.2 PASS, ==1.1 REVIEW, <=1.0 FAIL"
+    },
+    {
+      "rule_id": "S1-WEAK-001",
+      "standard_id": "标准1.2",
+      "check_item": "不合适的加密算法",
+      "field": "crypto.weak",
+      "value": "MD5,SHA-1,DES,RC4",
+      "verdict": "REVIEW",
+      "reason": "Weak algorithm keyword detected.",
+      "priority": "P0",
+      "policy": "Weak keyword hit => REVIEW, otherwise PASS"
+    }
+  ],
+  "stage_5_task_result": {
+    "task_id": "task-0001",
+    "file_name": "网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告.pdf",
+    "status": "completed",
+    "result": {
+      "schema_version": "s1.v1",
+      "trace_id": "trace-8fb4fe190e05",
+      "generated_at": "2026-04-20T10:50:11.646655+00:00",
+      "rulebook_version": "S1-RULEBOOK-v0.1",
+      "task_id": "task-0001",
+      "fields": {
+        "crypto.rsa.key_length": "2048",
+        "crypto.tls.version": "1.2",
+        "crypto.weak": "MD5,SHA-1,DES,RC4",
+        "raw_text": "page 1: 网络空间安全基地 +南昌大学学工一 体化平台垂直越权 +攻击报告 南昌大学学工一体化平台垂直越权 攻击成果报告 攻击队： 网络空间安全基地 时间： 2025年6月27日 目录 1 综述 2 分析过程 2.1 资产关联性证明 2.2 攻击路径说明 2.3 攻击成果说明 3 结论 4 修复建议： 1. 综述 结果总结汇总如下表： 序号 系统对象 单位 漏洞类型 URL/主机 数量\npage 2: 1 学工一体化 平台 南昌大学 垂直越权 https://swo swfw.ncu.e du.cn/man age 1 2 学工一体化 平台 南昌大学 敏感信息泄 露 https://swo swfw.ncu.e du.cn/man age 1 2. 分析过程 2.1 资产关联性证明 内网网段，校园网访问 2.2 攻击路径说明 直接登录 2.3 攻击成果说明 成果目标基本情况 获得后台权限，能够获取学生填写数据\npage 3: 可以看到可以拿到学籍照片等等，还能够违规处分进行管理访问 https://swoswfw.ncu.edu.cn/manage ，用个人学习通账号登录，还可以看个人档案 也能够处理第二课堂学分等等 修复建议 加强权限校验 RSA2048 、RSA-3072、TLS1.2、TLS 1.3、MD5、SHA-1、DES、 RC4"
+      },
+      "rule_results": [
+        {
+          "rule_id": "S1-RSA-001",
+          "standard_id": "标准1.1",
+          "check_item": "密钥长度",
+          "field": "crypto.rsa.key_length",
+          "value": "2048",
+          "verdict": "REVIEW",
+          "reason": "RSA 2048 requires policy review in S1 baseline.",
+          "priority": "P0",
+          "policy": ">=3072 PASS, ==2048 REVIEW, <2048 FAIL"
+        },
+        {
+          "rule_id": "S1-TLS-001",
+          "standard_id": "标准1.2",
+          "check_item": "TLS协议版本",
+          "field": "crypto.tls.version",
+          "value": "1.2",
+          "verdict": "PASS",
+          "reason": "TLS version is >= 1.2.",
+          "priority": "P0",
+          "policy": ">=1.2 PASS, ==1.1 REVIEW, <=1.0 FAIL"
+        },
+        {
+          "rule_id": "S1-WEAK-001",
+          "standard_id": "标准1.2",
+          "check_item": "不合适的加密算法",
+          "field": "crypto.weak",
+          "value": "MD5,SHA-1,DES,RC4",
+          "verdict": "REVIEW",
+          "reason": "Weak algorithm keyword detected.",
+          "priority": "P0",
+          "policy": "Weak keyword hit => REVIEW, otherwise PASS"
+        }
+      ],
+      "findings": [
+        {
+          "rule_id": "S1-RSA-001",
+          "standard_id": "标准1.1",
+          "check_item": "密钥长度",
+          "field": "crypto.rsa.key_length",
+          "value": "2048",
+          "verdict": "REVIEW",
+          "reason": "RSA 2048 requires policy review in S1 baseline.",
+          "priority": "P0",
+          "policy": ">=3072 PASS, ==2048 REVIEW, <2048 FAIL"
+        },
+        {
+          "rule_id": "S1-TLS-001",
+          "standard_id": "标准1.2",
+          "check_item": "TLS协议版本",
+          "field": "crypto.tls.version",
+          "value": "1.2",
+          "verdict": "PASS",
+          "reason": "TLS version is >= 1.2.",
+          "priority": "P0",
+          "policy": ">=1.2 PASS, ==1.1 REVIEW, <=1.0 FAIL"
+        },
+        {
+          "rule_id": "S1-WEAK-001",
+          "standard_id": "标准1.2",
+          "check_item": "不合适的加密算法",
+          "field": "crypto.weak",
+          "value": "MD5,SHA-1,DES,RC4",
+          "verdict": "REVIEW",
+          "reason": "Weak algorithm keyword detected.",
+          "priority": "P0",
+          "policy": "Weak keyword hit => REVIEW, otherwise PASS"
+        }
+      ],
+      "pending_reviews": [
+        {
+          "rule_id": "S1-RSA-001",
+          "standard_id": "标准1.1",
+          "check_item": "密钥长度",
+          "field": "crypto.rsa.key_length",
+          "value": "2048",
+          "reason": "RSA 2048 requires policy review in S1 baseline."
+        },
+        {
+          "rule_id": "S1-WEAK-001",
+          "standard_id": "标准1.2",
+          "check_item": "不合适的加密算法",
+          "field": "crypto.weak",
+          "value": "MD5,SHA-1,DES,RC4",
+          "reason": "Weak algorithm keyword detected."
+        }
+      ],
+      "review_details": [
+        {
+          "rule_id": "S1-RSA-001",
+          "standard_id": "标准1.1",
+          "check_item": "密钥长度",
+          "field": "crypto.rsa.key_length",
+          "value": "2048",
+          "reason": "RSA 2048 requires policy review in S1 baseline.",
+          "normalized": "RSA-2048",
+          "explanation": "RSA key length meets minimum baseline but should be reviewed by policy.",
+          "confidence": "0.90",
+          "policy_hint": "s1_rsa_review"
+        },
+        {
+          "rule_id": "S1-WEAK-001",
+          "standard_id": "标准1.2",
+          "check_item": "不合适的加密算法",
+          "field": "crypto.weak",
+          "value": "MD5,SHA-1,DES,RC4",
+          "reason": "Weak algorithm keyword detected.",
+          "normalized": "WEAK-ALGO-MD5",
+          "explanation": "Weak cryptographic algorithm keyword detected.",
+          "confidence": "0.92",
+          "policy_hint": "manual_review_required"
+        }
+      ],
+      "summary": {
+        "PASS": 1,
+        "FAIL": 0,
+        "REVIEW": 2
+      }
+    }
+  },
+  "warnings": []
+}

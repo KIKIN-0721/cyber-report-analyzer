@@ -11,6 +11,7 @@
 - 模型类 Issue 必须说明模型输出是否只作为解释和复核建议。
 - 证据类 Issue 必须保留 `field/value/page/snippet/source_type`。
 - 关闭 Issue 前必须说明是否改变 `RuleResult` 或 `EvidenceTrace`。
+- 关闭 Issue 前必须说明是否改变标准编号、检查项名称或条款级 verdict。
 
 ## A. 徐志翔
 

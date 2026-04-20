@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import base64
+import argparse
+import json
 import re
 import zlib
 from pathlib import Path
@@ -319,3 +321,38 @@ def _decode_ascii85(data: bytes) -> bytes:
     if cleaned.startswith(b"<~") and cleaned.endswith(b"~>"):
         return base64.a85decode(cleaned, adobe=True)
     return base64.a85decode(cleaned)
+
+
+def _build_cli_payload(pdf_path: Path) -> Dict[str, object]:
+    result = extract_text_and_images(pdf_path)
+    text_blocks = result.get("text_blocks", [])
+    image_paths = result.get("image_paths", [])
+    return {
+        "input_pdf": str(pdf_path),
+        "file_name": pdf_path.name,
+        "exists": pdf_path.exists(),
+        "is_file": pdf_path.is_file(),
+        "size_bytes": pdf_path.stat().st_size,
+        "parser_text_block_count": len(text_blocks),
+        "image_count": len(image_paths),
+        "parser_text_blocks_full": text_blocks,
+        "image_paths": image_paths,
+    }
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser(description="Parse one PDF with the S1 parser MVP.")
+    parser.add_argument("pdf_path", type=Path, help="Path to the PDF file.")
+    parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    args = parser.parse_args()
+
+    payload = _build_cli_payload(args.pdf_path)
+    text = json.dumps(payload, ensure_ascii=False, indent=2)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(text, encoding="utf-8")
+    print(text)
+
+
+if __name__ == "__main__":
+    _main()

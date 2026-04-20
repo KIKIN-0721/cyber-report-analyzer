@@ -1,3 +1,5 @@
+import argparse
+import json
 from typing import Any, Dict, List
 
 
@@ -7,6 +9,8 @@ S1_RULEBOOK_SOURCE = "docs/rules/S1-规则台账-v0.1.md"
 S1_P0_RULES: List[Dict[str, str]] = [
     {
         "rule_id": "S1-RSA-001",
+        "standard_id": "标准1.1",
+        "check_item": "密钥长度",
         "name": "RSA key length baseline",
         "field": "crypto.rsa.key_length",
         "priority": "P0",
@@ -17,6 +21,8 @@ S1_P0_RULES: List[Dict[str, str]] = [
     },
     {
         "rule_id": "S1-TLS-001",
+        "standard_id": "标准1.2",
+        "check_item": "TLS协议版本",
         "name": "TLS version baseline",
         "field": "crypto.tls.version",
         "priority": "P0",
@@ -27,6 +33,8 @@ S1_P0_RULES: List[Dict[str, str]] = [
     },
     {
         "rule_id": "S1-WEAK-001",
+        "standard_id": "标准1.2",
+        "check_item": "不合适的加密算法",
         "name": "Weak algorithm keyword baseline",
         "field": "crypto.weak",
         "priority": "P0",
@@ -41,6 +49,8 @@ S1_P0_RULES: List[Dict[str, str]] = [
 S1_P1_RULES: List[Dict[str, str]] = [
     {
         "rule_id": "S1-P1-PORT-001",
+        "standard_id": "标准2.1",
+        "check_item": "端口与服务暴露",
         "name": "Port service and insecure configuration keywords",
         "field": "network.service",
         "priority": "P1",
@@ -51,6 +61,8 @@ S1_P1_RULES: List[Dict[str, str]] = [
     },
     {
         "rule_id": "S1-P1-SIGN-001",
+        "standard_id": "标准2.2",
+        "check_item": "更新与签名机制",
         "name": "Update and signing mechanism checks",
         "field": "system.update",
         "priority": "P1",
@@ -61,6 +73,8 @@ S1_P1_RULES: List[Dict[str, str]] = [
     },
     {
         "rule_id": "S1-P1-AUTH-001",
+        "standard_id": "标准2.3",
+        "check_item": "认证方式与默认口令",
         "name": "Authentication and default credential checks",
         "field": "auth.default_password",
         "priority": "P1",
@@ -90,3 +104,24 @@ def get_s1_rulebook() -> Dict[str, Any]:
         "rules": get_s1_rules_by_priority("P0"),
         "documented_rules": get_s1_rules_by_priority("P1"),
     }
+
+
+def _main() -> None:
+    parser = argparse.ArgumentParser(description="Print the S1 rulebook.")
+    parser.add_argument(
+        "--priority",
+        choices=["P0", "P1"],
+        help="Only print rules for one priority.",
+    )
+    args = parser.parse_args()
+
+    payload: Any
+    if args.priority:
+        payload = get_s1_rules_by_priority(args.priority)
+    else:
+        payload = get_s1_rulebook()
+    print(json.dumps(payload, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    _main()
