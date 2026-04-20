@@ -1,19 +1,18 @@
 import argparse
-import json
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
 from uuid import uuid4
 
-ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
+if __package__ in (None, ""):
+    ROOT = Path(__file__).resolve().parents[2]
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
 
 from src.common.json_io import dump_json, load_string_map, write_json_file
 from src.model_review.reviewer import batch_semantic_review
 from src.reporting.report_exporter import export_summary
-from src.rules_engine.s1_field_extractor import S1_CORE_FIELDS
 from src.rules_engine.rule_engine import classify_review_items, evaluate_rules, evaluate_s1_baseline
 from src.rules_engine.s1_rulebook import get_s1_rulebook
 
@@ -115,6 +114,14 @@ def _load_fields(path: Path) -> Dict[str, str]:
     return load_string_map(path)
 
 
+def _resolve_file_name(file_name: str | None, pdf_path: Path | None, fields_file: Path) -> str:
+    if file_name:
+        return file_name
+    if pdf_path:
+        return pdf_path.name
+    return f"{fields_file.stem}.pdf"
+
+
 def _main() -> None:
     parser = argparse.ArgumentParser(description="Run the S1 backend task loop.")
     parser.add_argument("--file-name", help="Original report file name.")
@@ -123,7 +130,7 @@ def _main() -> None:
     parser.add_argument("--output", type=Path, help="Optional JSON output path.")
     args = parser.parse_args()
 
-    file_name = args.file_name or (args.pdf_path.name if args.pdf_path else "")
+    file_name = _resolve_file_name(args.file_name, args.pdf_path, args.fields_file)
     task = submit_report(file_name)
     completed = analyze_task(task["task_id"], _load_fields(args.fields_file), [])
     compact = {

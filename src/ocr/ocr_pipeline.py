@@ -65,7 +65,12 @@ def _get_ocr_engine() -> Any:
     if _ocr_engine is None:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            from paddleocr import PaddleOCR
+            try:
+                from paddleocr import PaddleOCR
+            except ModuleNotFoundError as exc:
+                raise ModuleNotFoundError(
+                    "PaddleOCR is required for OCR. Install it with `pip install paddleocr` or add the OCR backend dependency set."
+                ) from exc
 
             _ocr_engine = PaddleOCR(
                 use_angle_cls=True,

@@ -42,7 +42,7 @@
 5. [S5][rules] 规则库发布说明
 - 截止：2026-07-23
 - 标签：type:docs stage:S5 module:rules priority:P1
-- 验收：规则库版本与变更说明齐备
+- 验收：规则库版本、来源和变更说明齐备
 
 6. [S5][rules] 规则覆盖统计与结题图表
 - 截止：2026-07-29
@@ -70,7 +70,7 @@
 
 10. [S5][reporting] 演示案例说明整理
 - 截止：2026-07-29
-- 标签：type:docs stage:S5 module:evidence priority:P1
+- 标签：type:docs stage:S5 module:reporting priority:P1
 - 验收：演示案例可直接用于结题汇报
 
 ## F. 吴世豪

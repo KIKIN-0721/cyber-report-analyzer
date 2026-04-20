@@ -3,12 +3,13 @@
 配套执行文档：docs/github/S4-协同开发执行手册.md
 
 使用建议：
-- 优先保障上传-解析-展示-导出主流程
+- 优先保障上传-解析-展示-规则维护-导出主流程
 - 每个缺陷 Issue 必须包含复现步骤和回归结果
 
 执行规则：
 - Web 展示类 Issue 必须附接口响应样例或截图。
 - 导出类 Issue 必须验证页面字段和导出字段一致。
+- 规则维护类 Issue 必须验证保存后立即生效。
 - 缺陷类 Issue 必须包含复现步骤、修复说明、回归结果。
 - 关闭 Issue 前必须确认不破坏 S3 已冻结结果结构。
 - 页面和导出必须复用同一条款级 view model。
@@ -18,7 +19,7 @@
 1. [S4][management] 冻结演示路径与M4验收标准
 - 截止：2026-06-24
 - 标签：type:docs stage:S4 module:docs priority:P0
-- 验收：演示路径文档与M4验收清单草案发布
+- 验收：演示路径文档与 M4 验收清单草案发布，包含规则维护演示
 
 2. [S4][management] M4验收组织与缺陷收敛检查
 - 截止：2026-07-09
@@ -32,10 +33,10 @@
 - 标签：type:feature stage:S4 module:web priority:P0
 - 验收：上传、查询流程可演示
 
-4. [S4][web] 筛选与导出接口完善
+4. [S4][web] 规则维护与导出接口完善
 - 截止：2026-07-08
 - 标签：type:feature stage:S4 module:web priority:P1
-- 验收：筛选与导出接口稳定可用
+- 验收：规则保存后立即生效，筛选与导出接口稳定可用
 
 ## C. 邱馨甜
 
@@ -66,11 +67,11 @@
 9. [S4][evidence] 证据查看功能落地
 - 截止：2026-07-03
 - 标签：type:feature stage:S4 module:evidence priority:P0
-- 验收：支持按结果定位证据页码和片段
+- 验收：支持按结果定位证据页码、片段和截图
 
 10. [S4][reporting] 导出一致性校验
 - 截止：2026-07-08
-- 标签：type:test stage:S4 module:evidence priority:P1
+- 标签：type:test stage:S4 module:reporting priority:P1
 - 验收：导出结果与页面展示一致
 
 ## F. 吴世豪
@@ -78,7 +79,7 @@
 11. [S4][ci] 端到端回归基线
 - 截止：2026-06-30
 - 标签：type:test stage:S4 module:ci priority:P0
-- 验收：S4主流程回归纳入CI
+- 验收：S4 主流程回归纳入 CI
 
 12. [S4][test] M4质量报告发布
 - 截止：2026-07-10

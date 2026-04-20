@@ -4,6 +4,7 @@ from src.web.app import (
     get_task,
     get_task_result,
     health,
+    _resolve_file_name,
     set_task_result,
     submit_report,
 )
@@ -84,3 +85,11 @@ def test_analyze_task_uses_s1_baseline_when_rules_empty() -> None:
     assert review_details[0]["normalized"] == "RSA-2048"
     assert any(item["normalized"] == "TLS-1.1" for item in review_details)
     assert any(item["standard_id"] == "标准1.1" for item in pending)
+
+
+def test_resolve_file_name_falls_back_to_fields_file_stem(tmp_path) -> None:
+    fields_file = tmp_path / "02_fields.json"
+
+    assert _resolve_file_name(None, None, fields_file) == "02_fields.pdf"
+    assert _resolve_file_name(None, tmp_path / "sample.pdf", fields_file) == "sample.pdf"
+    assert _resolve_file_name("manual.pdf", tmp_path / "sample.pdf", fields_file) == "manual.pdf"

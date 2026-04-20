@@ -3,7 +3,7 @@
 配套执行文档：docs/github/S3-协同开发执行手册.md
 
 使用建议：
-- 先关闭规则引擎 P0，再推进模型复核 P1
+- 先关闭主规则库和判定引擎 P0，再推进复核和证据 P1
 - 所有 Issue 必须附样本输入与预期输出
 
 执行规则：
@@ -11,7 +11,7 @@
 - 模型类 Issue 必须说明模型输出是否只作为解释和复核建议。
 - 证据类 Issue 必须保留 `field/value/page/snippet/source_type`。
 - 关闭 Issue 前必须说明是否改变 `RuleResult` 或 `EvidenceTrace`。
-- 关闭 Issue 前必须说明是否改变标准编号、检查项名称或条款级 verdict。
+- 关闭 Issue 前必须说明是否改变标准编号、检查项名称、主规则来源或条款级 verdict。
 
 ## A. 徐志翔
 
@@ -39,10 +39,10 @@
 
 ## C. 邱馨甜
 
-5. [S3][rules] 首版规则引擎规则集
+5. [S3][rules] 主规则库合并与版本化
 - 截止：2026-06-08
 - 标签：type:feature stage:S3 module:rules priority:P0
-- 验收：核心规则可执行并输出三态结果
+- 验收：两份主清单合并为统一规则库，并可回放来源映射
 
 6. [S3][rules] 待复核触发策略
 - 截止：2026-06-18
@@ -58,7 +58,7 @@
 
 8. [S3][storage] 判定结果落库与异常处理
 - 截止：2026-06-16
-- 标签：type:feature stage:S3 module:deploy priority:P1
+- 标签：type:feature stage:S3 module:storage priority:P1
 - 验收：结果可保存并具备异常重试机制
 
 ## E. 王牧秋
@@ -66,29 +66,29 @@
 9. [S3][evidence] 证据追溯增强模块
 - 截止：2026-06-10
 - 标签：type:feature stage:S3 module:evidence priority:P0
-- 验收：每条结果可关联页码片段截图来源
+- 验收：每条结果可关联页码、片段和截图来源
 
 10. [S3][reporting] 简要分析导出接口
 - 截止：2026-06-18
-- 标签：type:feature stage:S3 module:evidence priority:P1
-- 验收：输出问题分布与待复核摘要
+- 标签：type:feature stage:S3 module:reporting priority:P1
+- 验收：输出问题分布、待复核摘要和 findings 统计
 
 ## F. 吴世豪
 
 11. [S3][ci] 规则与模型回归门禁
 - 截止：2026-06-06
 - 标签：type:test stage:S3 module:ci priority:P0
-- 验收：规则与模型回归纳入CI门禁
+- 验收：规则与模型回归纳入 CI 门禁
 
 12. [S3][test] M3阶段质量报告
 - 截止：2026-06-20
 - 标签：type:docs stage:S3 module:docs priority:P1
-- 验收：发布M3质量报告与缺陷闭环清单
+- 验收：发布 M3 质量报告与缺陷闭环清单
 
 ## S3提交节奏要求
 
 - 每日：规则或模型变更当天必须附测试证据
-- 周二：规则更新PR集中评审
-- 周四：模型链路PR集中评审
+- 周二：规则更新 PR 集中评审
+- 周四：模型链路 PR 集中评审
 - 周日 22:00：合并稳定分支到 develop
 - 2026-06-20：打里程碑标签 v0.3-m3
