@@ -30,10 +30,123 @@ def extract_text_and_images(pdf_path: Path) -> Dict[str, List[str]]:
         raise ValueError(f"pdf_path must be a file: {pdf_path}")
 
     pdf_bytes = pdf_path.read_bytes()
-    text_blocks = _extract_pdf_text_blocks(pdf_bytes)
-    image_paths = _extract_pdf_images(pdf_bytes, pdf_path)
+    text_blocks = _extract_text_blocks(pdf_path, pdf_bytes)
+    image_paths = _extract_images(pdf_path, pdf_bytes)
 
     return {"text_blocks": text_blocks, "image_paths": image_paths}
+
+
+def _extract_images(pdf_path: Path, pdf_bytes: bytes) -> List[str]:
+    image_paths = _extract_images_with_reader(pdf_path)
+    if image_paths:
+        return image_paths
+    return _extract_pdf_images(pdf_bytes, pdf_path)
+
+
+def _extract_text_blocks(pdf_path: Path, pdf_bytes: bytes) -> List[str]:
+    blocks = _extract_text_blocks_with_reader(pdf_path)
+    if blocks:
+        return blocks
+    return _extract_pdf_text_blocks(pdf_bytes)
+
+
+def _extract_text_blocks_with_reader(pdf_path: Path) -> List[str]:
+    reader_cls = _resolve_pdf_reader()
+    if reader_cls is None:
+        return []
+
+    try:
+        reader = reader_cls(str(pdf_path))
+    except Exception:
+        return []
+
+    text_blocks: List[str] = []
+    for page in getattr(reader, "pages", []):
+        try:
+            text = page.extract_text() or ""
+        except Exception:
+            continue
+        text_blocks.extend(_normalize_text_lines(text))
+    return text_blocks
+
+
+def _resolve_pdf_reader():
+    try:
+        from pypdf import PdfReader  # type: ignore[import-not-found]
+
+        return PdfReader
+    except Exception:
+        pass
+
+    try:
+        from PyPDF2 import PdfReader  # type: ignore[import-not-found]
+
+        return PdfReader
+    except Exception:
+        return None
+
+
+def _normalize_text_block(text: str) -> str:
+    cleaned = text.replace("\x00", "").replace("\r\n", "\n").replace("\r", "\n")
+    lines = [re.sub(r"\s+", " ", line).strip() for line in cleaned.split("\n")]
+    return "\n".join(line for line in lines if line)
+
+
+def _normalize_text_lines(text: str) -> List[str]:
+    cleaned = text.replace("\x00", "").replace("\r\n", "\n").replace("\r", "\n")
+    return [line for line in (re.sub(r"\s+", " ", s).strip() for s in cleaned.split("\n")) if line]
+
+
+def _extract_images_with_reader(pdf_path: Path) -> List[str]:
+    reader_cls = _resolve_pdf_reader()
+    if reader_cls is None:
+        return []
+
+    try:
+        reader = reader_cls(str(pdf_path))
+    except Exception:
+        return []
+
+    image_paths: List[str] = []
+    output_dir: Path | None = None
+
+    for page_index, page in enumerate(getattr(reader, "pages", []), start=1):
+        images = getattr(page, "images", [])
+        for image_index, image in enumerate(images, start=1):
+            data = getattr(image, "data", None)
+            if not isinstance(data, (bytes, bytearray)):
+                continue
+
+            if output_dir is None:
+                output_dir = pdf_path.parent / "tmp" / f"{pdf_path.stem}_images"
+                output_dir.mkdir(parents=True, exist_ok=True)
+
+            name = str(getattr(image, "name", ""))
+            extension = Path(name).suffix.lstrip(".").lower() or _guess_image_extension(bytes(data))
+            if not extension:
+                extension = "bin"
+
+            image_path = output_dir / f"page_{page_index:03d}_image_{image_index:03d}.{extension}"
+            image_path.write_bytes(bytes(data))
+            image_paths.append(str(image_path))
+
+    return image_paths
+
+
+def _guess_image_extension(data: bytes) -> str:
+    if data.startswith(b"\xff\xd8\xff"):
+        return "jpg"
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return "png"
+    if data.startswith(b"GIF87a") or data.startswith(b"GIF89a"):
+        return "gif"
+    if data.startswith(b"BM"):
+        return "bmp"
+    if len(data) >= 12 and data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "webp"
+    if data.startswith(b"\x00\x00\x00\x0cjP  \r\n\x87\n"):
+        return "jp2"
+    return ""
 
 
 def _extract_pdf_text_blocks(pdf_bytes: bytes) -> List[str]:

@@ -1,0 +1,35 @@
+[
+  {
+    "rule_id": "S1-RSA-001",
+    "standard_id": "标准1.1",
+    "check_item": "密钥长度",
+    "field": "crypto.rsa.key_length",
+    "value": "",
+    "verdict": "REVIEW",
+    "reason": "RSA key length is missing.",
+    "priority": "P0",
+    "policy": ">=3072 PASS, ==2048 REVIEW, <2048 FAIL"
+  },
+  {
+    "rule_id": "S1-TLS-001",
+    "standard_id": "标准1.2",
+    "check_item": "TLS协议版本",
+    "field": "crypto.tls.version",
+    "value": "",
+    "verdict": "REVIEW",
+    "reason": "TLS version is missing.",
+    "priority": "P0",
+    "policy": ">=1.2 PASS, ==1.1 REVIEW, <=1.0 FAIL"
+  },
+  {
+    "rule_id": "S1-WEAK-001",
+    "standard_id": "标准1.2",
+    "check_item": "不合适的加密算法",
+    "field": "crypto.weak",
+    "value": "DES,RC4",
+    "verdict": "REVIEW",
+    "reason": "Weak algorithm keyword detected.",
+    "priority": "P0",
+    "policy": "Weak keyword hit => REVIEW, otherwise PASS"
+  }
+]

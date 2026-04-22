@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import re
 import zlib
 from pathlib import Path
 
@@ -57,6 +58,20 @@ def test_extract_text_and_images_exports_embedded_jpeg(tmp_path: Path) -> None:
     assert exported_image.exists()
     assert exported_image.suffix.lower() == ".jpg"
     assert exported_image.read_bytes() == jpeg_bytes
+
+
+def test_extract_text_and_images_real_pdf_has_chinese_text() -> None:
+    real_pdf = (
+        Path(__file__).resolve().parents[2]
+        / "tests"
+        / "网络空间安全基地+南昌大学学工一体化平台垂直越权+攻击报告.pdf"
+    )
+    if not real_pdf.exists():
+        pytest.skip("real PDF fixture not found")
+
+    result = extract_text_and_images(real_pdf)
+    joined_text = "\n".join(result["text_blocks"])
+    assert re.search(r"[\u4e00-\u9fff]", joined_text)
 
 
 def _build_pdf_with_text_stream(stream_bytes: bytes, *, flate: bool) -> bytes:

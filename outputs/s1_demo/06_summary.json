@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "PASS": 0,
+    "FAIL": 0,
+    "REVIEW": 3
+  },
+  "warnings": [
+    "S1 field not found in PDF text: crypto.rsa.key_length",
+    "S1 field not found in PDF text: crypto.tls.version"
+  ]
+}

@@ -1,17 +1,16 @@
-# S3阶段 Issue 清单（2026-05-21 至 2026-06-20）
+# S3 阶段 Issue 清单（条款级 finding 版）
 
 配套执行文档：docs/github/S3-协同开发执行手册.md
 
 使用建议：
-- 先关闭主规则库和判定引擎 P0，再推进复核和证据 P1
-- 所有 Issue 必须附样本输入与预期输出
+- 先关闭主规则库和判定引擎 P0，再推进复核和证据 P1。
+- 所有 Issue 必须附样本输入与预期输出。
 
 执行规则：
 - 规则类 Issue 必须覆盖 PASS、FAIL、REVIEW 至少两类样例。
 - 模型类 Issue 必须说明模型输出是否只作为解释和复核建议。
-- 证据类 Issue 必须保留 `field/value/page/snippet/source_type`。
-- 关闭 Issue 前必须说明是否改变 `RuleResult` 或 `EvidenceTrace`。
-- 关闭 Issue 前必须说明是否改变标准编号、检查项名称、主规则来源或条款级 verdict。
+- 证据类 Issue 必须保留 `field/value/page/section_id/paragraph_id/snippet/source_type`。
+- 关闭 Issue 前必须说明是否改变 `RuleResult`、`Finding` 或 `EvidenceTrace`。
 
 ## A. 徐志翔
 
@@ -20,10 +19,10 @@
 - 标签：type:feature stage:S3 module:rules priority:P0
 - 验收：冲突处理策略文档发布并评审通过
 
-2. [S3][management] M3验收清单发布
+2. [S3][management] M3 验收清单发布
 - 截止：2026-06-19
 - 标签：type:docs stage:S3 module:docs priority:P0
-- 验收：M3验收清单发布并团队签收
+- 验收：M3 验收清单发布并团队签收
 
 ## B. 刘文旭
 
@@ -54,7 +53,7 @@
 7. [S3][parser] 提取输出与规则输入适配
 - 截止：2026-06-07
 - 标签：type:feature stage:S3 module:parser priority:P0
-- 验收：提取字段对齐规则引擎输入规范
+- 验收：提取字段对齐规则引擎输入规范，段落编号可回传
 
 8. [S3][storage] 判定结果落库与异常处理
 - 截止：2026-06-16
@@ -66,7 +65,7 @@
 9. [S3][evidence] 证据追溯增强模块
 - 截止：2026-06-10
 - 标签：type:feature stage:S3 module:evidence priority:P0
-- 验收：每条结果可关联页码、片段和截图来源
+- 验收：每条结果可关联页码、段落编号、片段和截图来源
 
 10. [S3][reporting] 简要分析导出接口
 - 截止：2026-06-18
@@ -80,12 +79,12 @@
 - 标签：type:test stage:S3 module:ci priority:P0
 - 验收：规则与模型回归纳入 CI 门禁
 
-12. [S3][test] M3阶段质量报告
+12. [S3][test] M3 阶段质量报告
 - 截止：2026-06-20
 - 标签：type:docs stage:S3 module:docs priority:P1
 - 验收：发布 M3 质量报告与缺陷闭环清单
 
-## S3提交节奏要求
+## S3 提交节奏要求
 
 - 每日：规则或模型变更当天必须附测试证据
 - 周二：规则更新 PR 集中评审

@@ -1,0 +1,10 @@
+[
+  {
+    "field": "crypto.weak",
+    "value": "DES,RC4",
+    "normalized": "WEAK-ALGO-DES",
+    "explanation": "Weak cryptographic algorithm keyword detected.",
+    "confidence": "0.92",
+    "policy_hint": "manual_review_required"
+  }
+]
