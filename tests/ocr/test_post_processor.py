@@ -1,5 +1,6 @@
 from src.ocr.correction import apply_correction
 from src.ocr.post_processor import (
+    build_structured_fields_from_ocr,
     clean_text,
     extract_fields_from_lines,
     normalize_text,
@@ -26,6 +27,7 @@ def test_extract_fields_rsa() -> None:
     assert fields[0]["field"] == "crypto.rsa.key_length"
     assert fields[0]["value"] == "2048"
     assert "bbox" in fields[0]
+    assert fields[0]["confidence"] == 0.95
     assert "RSA2048" in tokens
 
 
@@ -65,3 +67,48 @@ def test_correction() -> None:
     corrected, ctype = apply_correction("TSL 1.2")
     assert "TLS" in corrected
     assert ctype == "dict"
+
+
+def test_build_structured_fields_from_ocr_preserves_s2_source_fields() -> None:
+    ocr_results = [
+        {
+            "image_id": "img-0001",
+            "page": 3,
+            "section_id": "1.2",
+            "paragraph_id": "1.2-P04",
+            "source_type": "image_ocr",
+            "input_type": "pdf",
+            "confidence": 0.91,
+            "correction_type": "dict",
+            "fields": [
+                {
+                    "field": "crypto.rsa.key_length",
+                    "value": "2048",
+                    "snippet": "RSA2048",
+                    "bbox": {"x": 1, "y": 2, "w": 3, "h": 4},
+                    "raw_token": "RSA2048",
+                    "confidence": 0.93,
+                }
+            ],
+        }
+    ]
+
+    fields = build_structured_fields_from_ocr(ocr_results)
+
+    assert fields == [
+        {
+            "field": "crypto.rsa.key_length",
+            "value": "2048",
+            "source_type": "image_ocr",
+            "input_type": "pdf",
+            "page": 3,
+            "section_id": "1.2",
+            "paragraph_id": "1.2-P04",
+            "snippet": "RSA2048",
+            "confidence": 0.93,
+            "source_ref": "img-0001",
+            "bbox": {"x": 1, "y": 2, "w": 3, "h": 4},
+            "raw_token": "RSA2048",
+            "correction_type": "dict",
+        }
+    ]

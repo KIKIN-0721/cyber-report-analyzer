@@ -15,7 +15,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.parser.pdf_parser import extract_text_and_images
-from src.ocr.ocr_pipeline import run_batch_ocr
+from src.ocr.ocr_pipeline import build_ocr_image_items, run_ocr_for_parse_result
 
 
 def main() -> None:
@@ -35,44 +35,18 @@ def main() -> None:
     print(f"Images: {len(parse_result['image_paths'])}")
 
     if parse_result["image_paths"]:
-        # Build image items compatible with run_batch_ocr dict format
-        image_items = []
-        for idx, img_path in enumerate(parse_result["image_paths"], start=1):
-            image_items.append(
-                {
-                    "path": img_path,
-                    "image_id": f"img-{idx:04d}",
-                    "page": idx,  # fallback: sequential page numbering
-                }
-            )
+        image_items = build_ocr_image_items(parse_result)
 
         print("Running OCR on extracted images ...")
-        ocr_results = run_batch_ocr(image_items)
-
-        # Aggregate structured fields
-        all_fields = []
-        for ocr_res in ocr_results:
-            for field in ocr_res.get("fields", []):
-                all_fields.append(
-                    {
-                        "field": field["field"],
-                        "value": field["value"],
-                        "source_type": "image_ocr",
-                        "page": ocr_res["page"],
-                        "snippet": field["snippet"],
-                        "confidence": ocr_res["confidence"],
-                        "image_ref": ocr_res["image_id"],
-                        "bbox": field.get("bbox"),
-                    }
-                )
+        ocr_payload = run_ocr_for_parse_result({**parse_result, "images": image_items})
 
         output = {
-            "schema_version": "2.0",
+            "schema_version": "2.1",
             "pdf_path": str(pdf_path),
             "text_block_count": len(parse_result["text_blocks"]),
             "image_count": len(parse_result["image_paths"]),
-            "ocr_results": ocr_results,
-            "structured_fields": all_fields,
+            "ocr_results": ocr_payload["ocr_results"],
+            "structured_fields": ocr_payload["structured_fields"],
         }
 
         out_path = pdf_path.with_suffix(".s2_ocr.json")

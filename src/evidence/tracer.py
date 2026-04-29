@@ -28,7 +28,8 @@ def build_evidence_trace(hit: Dict[str, str]) -> Dict[str, Any]:
     Input hit should contain:
       - field, value, page, snippet, source_type, confidence
     Optional:
-      - task_id, rule_id, image_ref, bbox, correction_type, created_at
+      - task_id, rule_id, image_ref, source_ref, section_id, paragraph_id,
+        input_type, bbox, correction_type, created_at
     """
     if not isinstance(hit, dict):
         raise TypeError("hit must be a dict")
@@ -43,9 +44,12 @@ def build_evidence_trace(hit: Dict[str, str]) -> Dict[str, Any]:
         "field": str(hit.get("field") or ""),
         "value": str(hit.get("value") or ""),
         "page": page,
+        "section_id": str(hit.get("section_id") or ""),
+        "paragraph_id": str(hit.get("paragraph_id") or ""),
         "snippet": str(hit.get("snippet") or ""),
-        "image_ref": str(hit.get("image_ref") or ""),
+        "image_ref": str(hit.get("image_ref") or hit.get("source_ref") or ""),
         "source_type": str(hit.get("source_type") or "image_ocr"),
+        "input_type": str(hit.get("input_type") or ""),
         "confidence": float(hit.get("confidence", 0.0)) if hit.get("confidence") is not None else 0.0,
         "correction_type": str(hit.get("correction_type") or "none"),
     }

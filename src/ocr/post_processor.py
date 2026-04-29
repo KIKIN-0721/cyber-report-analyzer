@@ -115,7 +115,7 @@ def extract_fields_from_lines(ocr_lines: List[Any]) -> Tuple[List[Dict[str, Any]
         if not line:
             continue
         bbox = line[0]
-        text = line[1][0]
+        text, confidence = line[1]
         line_text = normalize_text(apply_correction(text)[0])
 
         for pattern in RSA_PATTERNS:
@@ -129,6 +129,7 @@ def extract_fields_from_lines(ocr_lines: List[Any]) -> Tuple[List[Dict[str, Any]
                             "snippet": _extract_snippet(normalized_text, match.group(0)),
                             "bbox": _bbox_to_rect(bbox),
                             "raw_token": match.group(0),
+                            "confidence": round(float(confidence), 4),
                         }
                     )
                     tokens.append(match.group(0))
@@ -144,6 +145,7 @@ def extract_fields_from_lines(ocr_lines: List[Any]) -> Tuple[List[Dict[str, Any]
                             "snippet": _extract_snippet(normalized_text, match.group(0)),
                             "bbox": _bbox_to_rect(bbox),
                             "raw_token": match.group(0),
+                            "confidence": round(float(confidence), 4),
                         }
                     )
                     tokens.append(match.group(0))
@@ -157,8 +159,57 @@ def extract_fields_from_lines(ocr_lines: List[Any]) -> Tuple[List[Dict[str, Any]
                         "snippet": _extract_snippet(normalized_text, name),
                         "bbox": _bbox_to_rect(bbox),
                         "raw_token": name,
+                        "confidence": round(float(confidence), 4),
                     }
                 )
                 tokens.append(name)
 
     return fields, tokens, normalized_text
+
+
+def build_structured_fields_from_ocr(
+    ocr_results: List[Dict[str, Any]], input_type: str = "pdf"
+) -> List[Dict[str, Any]]:
+    """Convert OCRResultV2 records into S2 StructuredField records.
+
+    The OCR layer keeps PaddleOCR-specific details such as bbox and raw_token
+    for evidence tracing, while always emitting the stable S2 fields consumed
+    by rules and storage.
+    """
+    structured_fields: List[Dict[str, Any]] = []
+
+    for result in ocr_results:
+        page = int(result.get("page", 0) or 0)
+        source_type = str(result.get("source_type") or "image_ocr")
+        image_id = str(result.get("image_id") or "")
+        section_id = str(result.get("section_id") or "")
+        paragraph_id = str(result.get("paragraph_id") or "")
+        result_confidence = float(result.get("confidence", 0.0) or 0.0)
+        result_input_type = str(result.get("input_type") or input_type)
+
+        for field_hit in result.get("fields", []):
+            confidence = float(field_hit.get("confidence", result_confidence) or 0.0)
+            structured: Dict[str, Any] = {
+                "field": str(field_hit.get("field") or ""),
+                "value": str(field_hit.get("value") or ""),
+                "source_type": source_type,
+                "input_type": result_input_type,
+                "page": page,
+                "section_id": section_id,
+                "paragraph_id": paragraph_id,
+                "snippet": str(field_hit.get("snippet") or ""),
+                "confidence": round(confidence, 4),
+                "source_ref": image_id,
+            }
+
+            # Evidence-facing extensions are intentionally preserved for S3/S4.
+            if field_hit.get("bbox") is not None:
+                structured["bbox"] = field_hit["bbox"]
+            if field_hit.get("raw_token") is not None:
+                structured["raw_token"] = field_hit["raw_token"]
+            if result.get("correction_type") is not None:
+                structured["correction_type"] = result["correction_type"]
+
+            structured_fields.append(structured)
+
+    return structured_fields

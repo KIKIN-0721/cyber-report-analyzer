@@ -8,8 +8,11 @@ def test_build_evidence_trace_basic() -> None:
         "field": "crypto.rsa.key_length",
         "value": "2048",
         "page": 3,
+        "section_id": "1.2",
+        "paragraph_id": "1.2-P04",
         "snippet": "RSA2048",
         "source_type": "image_ocr",
+        "input_type": "pdf",
         "confidence": "0.91",
     }
     trace = build_evidence_trace(hit)
@@ -17,7 +20,10 @@ def test_build_evidence_trace_basic() -> None:
     assert trace["field"] == "crypto.rsa.key_length"
     assert trace["value"] == "2048"
     assert trace["page"] == 3
+    assert trace["section_id"] == "1.2"
+    assert trace["paragraph_id"] == "1.2-P04"
     assert trace["source_type"] == "image_ocr"
+    assert trace["input_type"] == "pdf"
 
 
 def test_build_evidence_trace_with_bbox() -> None:
@@ -28,7 +34,7 @@ def test_build_evidence_trace_with_bbox() -> None:
         "value": "1.2",
         "page": 1,
         "snippet": "TLS1.2",
-        "image_ref": "img-0001",
+        "source_ref": "img-0001",
         "bbox": {"x": 10, "y": 20, "w": 100, "h": 30},
         "source_type": "image_ocr",
         "confidence": 0.95,
